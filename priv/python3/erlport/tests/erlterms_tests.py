@@ -420,12 +420,12 @@ class EncodeTestCase(unittest.TestCase):
         )
 
         self.assertEqual(
-            b'\x83t\x00\x00\x00\x01m\x00\x00\x00\x06hello1m\x00\x00\x00\x06world1',
+            b'\x83t\x00\x00\x00\x01k\x00\x06hello1m\x00\x00\x00\x06world1',
             encode(Map({b"hello1": b"world1"}))
         )
 
         self.assertEqual(
-            b"\x83t\x00\x00\x00\x01m\x00\x00\x00\x06hello1k\x00\x03\x01\x02\x03",
+            b"\x83t\x00\x00\x00\x01k\x00\x06hello1k\x00\x03\x01\x02\x03",
             encode(Map({b"hello1": List([1, 2, 3])}))
         )
 
