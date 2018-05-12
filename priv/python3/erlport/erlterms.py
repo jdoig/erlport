@@ -151,8 +151,11 @@ class Map(dict):
     def __new__(cls, *args, **kwargs):
         d = {}
         new = dict.__new__(cls)
+
         dict.__init__(d, *args, **kwargs)
         for k, v in d.items():
+            if isinstance(k, bytes):
+                k = k.decode()
             k = immutable(k)
             v = immutable(v)
             dict.__setitem__(new, k, v)
@@ -166,6 +169,11 @@ class Map(dict):
 
     def __hash__(self):
         return hash(tuple(sorted(self.items())))
+
+    def __getitem__(self, key):
+        if isinstance(key, bytes):
+            key = key.decode()
+        return super().__getitem__(key)
 
 
 class ImproperList(list):
