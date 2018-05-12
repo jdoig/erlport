@@ -420,7 +420,7 @@ class EncodeTestCase(unittest.TestCase):
         )
 
         self.assertEqual(
-            b'\x83t\x00\x00\x00\x01k\x00\x06hello1m\x00\x00\x00\x06world1',
+            b'\x83t\x00\x00\x00\x01k\x00\x06hello1k\x00\x06world1',
             encode(Map({b"hello1": b"world1"}))
         )
 

@@ -148,16 +148,21 @@ class Map(dict):
     __setitem__ = _mutation_error
     __delitem__ = _mutation_error
 
+    @staticmethod
+    def _byte_to_string(value):
+        if isinstance(value, bytes):
+            return value.decode()
+        return value
+
+
     def __new__(cls, *args, **kwargs):
         d = {}
         new = dict.__new__(cls)
 
         dict.__init__(d, *args, **kwargs)
         for k, v in d.items():
-            if isinstance(k, bytes):
-                k = k.decode()
-            k = immutable(k)
-            v = immutable(v)
+            k = immutable(cls._byte_to_string(k))
+            v = immutable(cls._byte_to_string(v))
             dict.__setitem__(new, k, v)
         return new
 
