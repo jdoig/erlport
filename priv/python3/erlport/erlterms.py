@@ -128,7 +128,8 @@ class List(list):
 
     def to_string(self):
         # Will raise TypeError if can't be converted
-        return "".join(map(chr, self))
+        string = "".join(map(chr, self))
+        return string
 
     def __repr__(self):
         return "List(%s)" % super(List, self).__repr__()
@@ -235,6 +236,8 @@ class OpaqueObject(object):
 
     @classmethod
     def decode(cls, data, language):
+        if isinstance(data, str):
+            data = data.encode()
         if language == b"python":
             return loads(data)
         return cls(data, language)
@@ -322,14 +325,15 @@ def decode_term(string,
         # NIL_EXT
         return List(), string[1:]
     elif tag == 107:
-        # STRING_EXT
+        # BYTES_EXT
         ln = len(string)
         if ln < 3:
             raise IncompleteData(string)
-        length = int2_unpack(string[1:3])[0] + 3
+        length = _int2_unpack(string[1:3])[0] + 3
         if ln < length:
             raise IncompleteData(string)
         return List(string[3:length]), string[length:]
+
     elif tag in b"lhi":
         # LIST_EXT, SMALL_TUPLE_EXT, LARGE_TUPLE_EXT
         if tag == 104:
@@ -386,14 +390,15 @@ def decode_term(string,
         i, = signed_int4_unpack(string[1:5])
         return i, string[5:]
     elif tag == 109:
-        # BINARY_EXT
+        # BINARY_EXT ... In Elixir this is a BitString
         ln = len(string)
         if ln < 5:
             raise IncompleteData(string)
         length = int4_unpack(string[1:5])[0] + 5
         if ln < length:
             raise IncompleteData(string)
-        return string[5:length], string[length:]
+        stringy = string[5:length]
+        return stringy.decode(), string[length:]
     elif tag == 70:
         # NEW_FLOAT_EXT
         if len(string) < 9:
