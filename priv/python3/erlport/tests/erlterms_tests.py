@@ -198,20 +198,20 @@ class DecodeTestCase(unittest.TestCase):
 
     def test_decode_map(self):
         self.assertEqual(
-            (Map({b"hello" :b"world"}), b""),
+            (Map({"hello" :"world"}), b""),
             decode(
                 b"\x83t\x00\x00\x00\x01m\x00\x00\x00\x05hellom\x00\x00\x00\x05world"
             )
         )
 
         self.assertEqual(
-            (Map({b"hello": b"world"}), b"rest"),
+            (Map({"hello": "world"}), b"rest"),
             decode(
                 b"\x83t\x00\x00\x00\x01m\x00\x00\x00\x05hellom\x00\x00\x00\x05worldrest")
         )
 
         self.assertEqual(
-            (Map({b"hello": List()}), b""),
+            (Map({"hello": List()}), b""),
             decode(b"\x83t\x00\x00\x00\x01m\x00\x00\x00\x05helloj")
         )
 
@@ -326,10 +326,10 @@ class DecodeTestCase(unittest.TestCase):
         self.assertRaises(IncompleteData, decode, b"\x83m\0\0")
         self.assertRaises(IncompleteData, decode, b"\x83m\0\0\0")
         self.assertRaises(IncompleteData, decode, b"\x83m\0\0\0\1")
-        self.assertEqual((b"", b""), decode(b"\x83m\0\0\0\0"))
-        self.assertEqual((b"", b"tail"), decode(b"\x83m\0\0\0\0tail"))
-        self.assertEqual((b"data", b""), decode(b"\x83m\0\0\0\4data"))
-        self.assertEqual((b"data", b"tail"), decode(b"\x83m\0\0\0\4datatail"))
+        self.assertEqual(("", b""), decode(b"\x83m\0\0\0\0"))
+        self.assertEqual(("", b"tail"), decode(b"\x83m\0\0\0\0tail"))
+        self.assertEqual(("data", b""), decode(b"\x83m\0\0\0\4data"))
+        self.assertEqual(("data", b"tail"), decode(b"\x83m\0\0\0\4datatail"))
 
     def test_decode_float(self):
         self.assertRaises(IncompleteData, decode, b"\x83F")
@@ -386,6 +386,7 @@ class DecodeTestCase(unittest.TestCase):
             b"\x78\xda\xcb\x66\x10\x49\xc1\2\0\x5d\x60\x08\x50"))
         self.assertEqual(([100] * 20, b"tail"), decode(b"\x83P\0\0\0\x17"
             b"\x78\xda\xcb\x66\x10\x49\xc1\2\0\x5d\x60\x08\x50tail"))
+
 
 class EncodeTestCase(unittest.TestCase):
 
